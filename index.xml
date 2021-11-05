@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bobby’s Blog</title>
+    <link>https://crispywei.github.io/</link>
+    <description>Recent content on Bobby’s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
+    <lastBuildDate>Thu, 04 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nginx install Mac local source</title>
+      <link>https://crispywei.github.io/post/nginx-install-mac/</link>
+      <pubDate>Thu, 04 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/nginx-install-mac/</guid>
+      <description>
+        
+          &lt;h1 id=&#34;nginx-mac-本機安裝&#34;&gt;Nginx Mac 本機安裝&lt;/h1&gt;
+&lt;p&gt;若使用brew安裝Nginx後續要進行add mudule較麻煩會發生找不到configure的情況，為防止此情況發生一開始就使用本機進行安裝配置&lt;/p&gt;
+&lt;p&gt;下載Nginx到本機&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;cd /usr/local/src  #src無此目錄自行建立
+curl -OL http://nginx.org/download/nginx-1.12.2.tar.gz ＃下載最新穩定版本
+tar -xvzf nginx-1.12.2.tar.gz &amp;amp;&amp;amp; rm nginx-1.12.2.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;下載PCRE Librry
+PCRE函式庫提供了正規表示功能，nginx.conf內設置http_rewrite_module與location會使用到&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;curl -OL https://ftp.pcre.org/pub/pcre/pcre-8.41.tar.gz
+tar xvzf pcre-8.41.tar.gz &amp;amp;&amp;amp; rm pcre-8.41.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;配置 Nginx
+要進入到有./configure的目錄中&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;cd nginx-1.12.2/
+./configure --with-pcre=../pcre-8.41/ 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;安裝 Nginx&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;[sudo] make &amp;amp;&amp;amp; make install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Add the nginx binary to $PATH:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;export PATH=&amp;quot;/usr/local/nginx/sbin:$PATH&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>SVS ELK Log Service Windows Install</title>
+      <link>https://crispywei.github.io/post/elk-windows-install/</link>
+      <pubDate>Thu, 04 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/elk-windows-install/</guid>
+      <description>
+        
+          &lt;p&gt;本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows與Ubuntu平台，並自動背景執行。
+&lt;img src=&#34;https://crispywei.github.io/images/elk-workflow.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;svs-elk-service-on-windows&#34;&gt;SVS ELK Service on Windows&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Windows 10 Minimal&lt;/li&gt;
+&lt;li&gt;Windows Server 2012 Minimal&lt;/li&gt;
+&lt;li&gt;JDK 1.8.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;elasticsearch-on-windows&#34;&gt;Elasticsearch on Windows&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請至官網 &lt;a href=&#34;https://www.elastic.co/downloads/elasticsearch&#34;&gt;https://www.elastic.co/downloads/elasticsearch&lt;/a&gt; 6.5.1版本&lt;/li&gt;
+&lt;li&gt;檔案重新命名後放置C:\ELK\elasticsearch&lt;/li&gt;
+&lt;li&gt;到C:\ELK\elasticsearch\bin資料夾下執行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;elasticsearch-service.bat install elasticsearch-service-x64
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;繼續執行 elasticsearch-service.bat manager&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;elasticsearch-service.bat manager
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;點擊Start來開啟服務&lt;/li&gt;
+&lt;li&gt;瀏覽器請輸入http://localhost:9200 ，會看到以下畫面:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/elasticsearch-image-1.png&#34; width=&#34;300&#34;/&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/elasticsearch-image-2.png&#34; width=&#34;273&#34;/&gt;
+&lt;ol start=&#34;7&#34;&gt;
+&lt;li&gt;編輯C:\ELK\elasticsearch\config\elasticsearch.yml檔案&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;#最下方加入，避免出現跨域問題
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;http.cors.enabled: true
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;http.cors.allow-origin: &amp;#34;*&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;img src=&#34;https://crispywei.github.io/images/elasticsearch-image-3.png&#34; width=&#34;300&#34;/&gt;
+&lt;h2 id=&#34;logstash-on-windows&#34;&gt;Logstash on Windows&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請至官網 &lt;a href=&#34;https://www.elastic.co/downloads/logstash&#34;&gt;https://www.elastic.co/downloads/logstash&lt;/a&gt; 6.5.1版本&lt;/li&gt;
+&lt;li&gt;檔案重新命名後放置C:\ELK\logstash&lt;/li&gt;
+&lt;li&gt;在bin資料夾裡建立logstash.conf，相關配置內容請查閱附件logstash.conf，如要設定其他參數可自行定義&lt;/li&gt;
+&lt;li&gt;在bin資料夾中建立run.bat內容如下:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;logstash.bat  -f logstash.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;安裝logstash到windows服務：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;從nssm官網上下載nssm壓縮檔，根據作業系統找出win32或win64中的nssm.exe&lt;/li&gt;
+&lt;li&gt;複製nssm.exe到C:\ELK\logstash\bin，接著叫出cmd輸入以下:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;nssm install logstash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;安裝logstash到windows服務：&lt;/li&gt;
+&lt;li&gt;出現安裝介面並選擇run.bat檔路徑，也可修改服務名稱&lt;/li&gt;
+&lt;li&gt;加入依賴，因為logstash的輸出是elasticsearch，如果elasticsearch沒有啟動，logstash就無法正常工作。&lt;/li&gt;
+&lt;li&gt;點擊install service按鈕，執行安裝過程。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/logstash-image-1.png&#34; width=&#34;300&#34;/&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/logstash-image-2.png&#34; width=&#34;290&#34;/&gt;
+&lt;h2 id=&#34;kibana-on-windows&#34;&gt;Kibana on Windows&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請至官網 &lt;a href=&#34;https://www.elastic.co/downloads/kibana&#34;&gt;https://www.elastic.co/downloads/kibana&lt;/a&gt;  6.5.1版本&lt;/li&gt;
+&lt;li&gt;檔案重新命名後放置C:\ELK\kibana&lt;/li&gt;
+&lt;li&gt;將nssm.exe複製到kibana的bin目錄下，叫出cmd輸入以下:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;nssm install kibana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;填寫如下內容，並在依賴裡面加入對應服務名稱：點擊install service按鈕，執行安裝
+&lt;img src=&#34;https://crispywei.github.io/images/kibana-image-1.png&#34; width=&#34;300&#34;/&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/kibana-image-2.png&#34; width=&#34;300&#34;/&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;kibana-run-browser&#34;&gt;Kibana Run Browser&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;打開cmd輸入services.msc會出現windows服務，依序啟動以下服務：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;Elasticsearch&lt;/li&gt;
+&lt;li&gt;Logstash&lt;/li&gt;
+&lt;li&gt;Kibana&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;在瀏覽器中輸入: http://localhost:5601/ 即可以看到Kibana介面&lt;/li&gt;
+&lt;/ol&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

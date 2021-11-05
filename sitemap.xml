@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://crispywei.github.io/</loc>
+    <lastmod>2021-11-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/post/nginx-install-mac/</loc>
+    <lastmod>2021-11-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/post/</loc>
+    <lastmod>2021-11-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/post/elk-windows-install/</loc>
+    <lastmod>2021-11-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/about/</loc>
+    <lastmod>2021-11-04T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/archives/</loc>
+    <lastmod>2019-05-28T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://crispywei.github.io/categories/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/tags/elk/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/tags/nginx/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/series/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/tags/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/tags/ubuntu/</loc>
+  </url><url>
+    <loc>https://crispywei.github.io/tags/windows/</loc>
+  </url>
+</urlset>
