@@ -140,7 +140,7 @@
   </div>
 
     
-    <p>本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows與Ubuntu平台，並自動背景執行。
+    <p>本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows系統，並自動背景執行。
 <img src="/images/elk-workflow.png" alt=""></p>
 <h2 id="svs-elk-service-on-windows">SVS ELK Service on Windows</h2>
 <ul>
@@ -220,6 +220,20 @@
 <ol start="2">
 <li>在瀏覽器中輸入: http://localhost:5601/ 即可以看到Kibana介面</li>
 </ol>
+<h2 id="filebeat-on-windows安裝">FileBeat on Windows安裝</h2>
+<ol>
+<li>請至官網 <a href="https://www.elastic.co/downloads/beats/filebeat">https://www.elastic.co/downloads/beats/filebeat</a> 進行下載</li>
+<li>將壓縮檔解壓縮到C:\ELK\</li>
+<li>重新命名為filebeat</li>
+<li>在filebeat下新增logs資料夾</li>
+<li>以管理員權限打開Windows PowerShell，執行以下命令</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>PS &gt; cd &#39;C:\ELK\Filebeat&#39;
+<span class="ln">2</span>PS C:\ELK\Filebeat &gt; ./install-service-filebeat.ps1
+</code></pre></div><ol start="6">
+<li>打開C:\ELK\filebeat\filebeat.yml進行相關配置，請查看附件內容</li>
+<li>打開cmd輸入services.msc會出現windows服務。請啟動filebeat</li>
+</ol>
 
 
   </article>
@@ -232,6 +246,12 @@
       <a href='https://crispywei.github.io/about/' class="button mt-1" role="button" title='閱讀更多'>閱讀更多</a>
     <h2 class="mt-4">最新文章</h2>
     <ul class="flex-column">
+      <li>
+        <a href="https://crispywei.github.io/post/kibana-apache-authentication/" class="nav-link" title="Kibana、Apache Basic Authentication">Kibana、Apache Basic Authentication</a>
+      </li>
+      <li>
+        <a href="https://crispywei.github.io/post/elk-ubuntu-install/" class="nav-link" title="SVS ELK Log Service Ubuntu Install">SVS ELK Log Service Ubuntu Install</a>
+      </li>
       <li>
         <a href="https://crispywei.github.io/post/nginx-install-mac/" class="nav-link" title="Nginx install Mac local source">Nginx install Mac local source</a>
       </li>

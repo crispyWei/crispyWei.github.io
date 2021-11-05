@@ -7,7 +7,212 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Thu, 04 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kibana、Apache Basic Authentication</title>
+      <link>https://crispywei.github.io/post/kibana-apache-authentication/</link>
+      <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/kibana-apache-authentication/</guid>
+      <description>
+        
+          &lt;p&gt;本文將分享如何將透過Apache .htpasswd進行kibana首頁保護&lt;/p&gt;
+&lt;h2 id=&#34;kibanaapache-basic-authentication&#34;&gt;Kibana、Apache Basic Authentication&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;使用「htpasswd」的指令建立密碼檔&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;htpasswd -c .htpasswd elkuser
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;將.htpasswd放置/var/ELK/.htpasswd&lt;/li&gt;
+&lt;li&gt;Apache開啟代理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;LoadModule proxy_module modules/mod_proxy.so
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;LoadModule proxy_http_module modules/mod_proxy_http.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;Apche httpd.conf設置反向代理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;apache-conf&#34;&gt;apache conf&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&amp;lt;VirtualHost *:80&amp;gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;	ServerName 127.0.0.1
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    DocumentRoot &amp;#34;C:\WebServer&amp;#34;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    #因為是Reverse，因此ProxyRequests要關閉
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;    ProxyRequests off
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &amp;lt;Location /&amp;gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;        Auth
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;         AuthType Basic
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        AuthName &amp;#34;Kibana&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        AuthUserFile &amp;#34;C:/WebServer/.htpasswd&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        Require valid-user
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;        #Reverse Proxy
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;        ProxyPass http://127.0.0.1:5601 retry=0
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;        ProxyPassReverse http://127.0.0.1:5601
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;        	 &amp;lt;/Location&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &amp;lt;Location /kibana&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;            #Auth
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;            AuthType Basic
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;            AuthName &amp;#34;Kibana&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;            AuthUserFile &amp;#34;C:/WebServer/.htpasswd&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;            Require valid-user
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;            # Reverse Proxy
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;        ProxyPass http://127.0.0.1:5601 retry=0
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;           ProxyPassReverse http://127.0.0.1:5601
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;     &amp;lt;/Location&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&amp;lt;/VirtualHost&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-kibana-on-browser&#34;&gt;Run Kibana on Browser&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請在網址輸入以下:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;http://127.0.0.1/kibana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>SVS ELK Log Service Ubuntu Install</title>
+      <link>https://crispywei.github.io/post/elk-ubuntu-install/</link>
+      <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/elk-ubuntu-install/</guid>
+      <description>
+        
+          &lt;p&gt;本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Ubuntu系統，並自動背景執行。
+&lt;img src=&#34;https://crispywei.github.io/images/elk-workflow.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;svs-elk-service-on-ubuntu&#34;&gt;SVS ELK Service on Ubuntu&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Ubuntu 16.04.3 LTS Minimal&lt;/li&gt;
+&lt;li&gt;Ubuntu 18.04.1 LTS Minimal&lt;/li&gt;
+&lt;li&gt;JDK 1.8.0 or OpenJDK 1.8.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;elasticsearch-on-ubuntu&#34;&gt;Elasticsearch on Ubuntu&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在/var底下新增ELK資料夾&lt;/li&gt;
+&lt;li&gt;在ELK資料夾輸入底下指令會進行下載&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;下載完畢後進行解壓縮&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;tar zxvf elasticsearch-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;重新命名為&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;mv elasticsearch-6.5.1 elasticsearch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;進入elasticsearch/bin，執行以下&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;./elasticsearch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;不要用root去執行./elasticsearch會報錯誤。請新增一個獨立的使用者用來執行ElasticSearch&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;Exception in thread &amp;#34;main&amp;#34; java.lang.RuntimeException: don&amp;#39;t run elasticsearch as root.
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;        at org.elasticsearch.bootstrap.Bootstrap.initializeNatives(Bootstrap.java:93)
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;        at org.elasticsearch.bootstrap.Bootstrap.setup(Bootstrap.java:144)
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;        at org.elasticsearch.bootstrap.Bootstrap.init(Bootstrap.java:285)
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;        at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:35)
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;        Refer to the log for complete error details.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;7&#34;&gt;
+&lt;li&gt;建立使用者elkuser並切換到elkuser在執行elasticsearch&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;useradd elkuser -p 1234
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;su elsearch cd elasticsearch/bin ./elasticsearch 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;logstash-on-ubuntu&#34;&gt;Logstash on Ubuntu&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在ELK資料夾輸入底下指令會進行下載&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget https://artifacts.elastic.co/downloads/logstash/logstash-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;下載完畢後進行解壓縮&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;tar zxvf logstash-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;重新命名為&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;mv logstash-6.5.1 logstash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;在bin資料夾裡建立logstash.conf，相關配置內容請查閱附件logstash.conf，如要設定其他參數可自行定義&lt;/li&gt;
+&lt;li&gt;到logstash/bin資料夾執行logstash&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;./logstash -f logstash.conf 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;kibana-on-ubuntu&#34;&gt;Kibana on Ubuntu&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在ELK目錄輸入底下指令會進行下載&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget https://artifacts.elastic.co/downloads/kibana/kibana-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;下載完畢後進行解壓縮&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;tar zxvf kibana-6.5.1.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;重新命名為&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;mv kibana-6.5.1 kibana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;到kibana/bin執行kibana服務&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;./kibana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;logterm-service-on-ubuntu&#34;&gt;LogTerm Service on Ubuntu&lt;/h2&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;使用supervisor來管理多個程序，執行以下指令:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo apt-get install supervisor -y
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;設置開機啟動&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo systemctl enable supervisor
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;sudo systemctl start supervisor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;新增elk.conf，配置內容請查閱附件elk.conf 。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo vim /etc/supervisor/conf.d/elk.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;supervisord.conf更動以下內容&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo vim /etc/supervisor/supervisord.conf
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;[include]
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;files = /etc/supervisor/conf.d/*.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;supervisord-相關指令參數&#34;&gt;Supervisord 相關指令參數&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;讓ELK相關服務會以 supervisord 子程式的身份運作，以下為supervisor相關指令:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo service supervisor start  //啟動supervisor服務
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;sudo service supervisor restart //重新啟動supervisor服務
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;sudo service supervisor stop //暫停supervisor服務
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;supervisorctl可以控制某一個程序啟動停止操作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;sudo supervisorctl status //查看程序運作狀態
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;sudo supervisorctl start all //啟動某個程序
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;sudo supervisorctl stop all //停止某個程序
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;sudo supervisorctl restart all //重啟某個程序
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;sudo supervisorctl update all //根據最新的設定檔，啟動新配置或有改動的程序，配置沒有改動的程序不會受影響而重啟
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;sudo supervisorctl reload //載入最新的設定檔，停止原有程序並按新的配置啟動
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;filebeat-on-ubuntu安裝&#34;&gt;FileBeat on Ubuntu安裝&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在ELK目錄輸入底下指令會進行下載&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.1.1-linux-x86_64.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;下載完畢後進行解壓縮&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;tar zxvf filebeat-6.1.1-linux-x86_64.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;重新命名為&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;mv filebeat-6.1.1-linux-x86_64 filebeat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;在filebeat下新增logs資料夾&lt;/li&gt;
+&lt;li&gt;打開/var/ELK/filebeat/filebeat.yml進行相關配置，請查看附件內容&lt;/li&gt;
+&lt;li&gt;運作filebeat&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;nohup ./filebeat
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
     <item>
       <title>Nginx install Mac local source</title>
       <link>https://crispywei.github.io/post/nginx-install-mac/</link>
@@ -62,7 +267,7 @@ tar xvzf pcre-8.41.tar.gz &amp;amp;&amp;amp; rm pcre-8.41.tar.gz
       <guid>https://crispywei.github.io/post/elk-windows-install/</guid>
       <description>
         
-          &lt;p&gt;本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows與Ubuntu平台，並自動背景執行。
+          &lt;p&gt;本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows系統，並自動背景執行。
 &lt;img src=&#34;https://crispywei.github.io/images/elk-workflow.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;svs-elk-service-on-windows&#34;&gt;SVS ELK Service on Windows&lt;/h2&gt;
 &lt;ul&gt;
@@ -141,6 +346,20 @@ tar xvzf pcre-8.41.tar.gz &amp;amp;&amp;amp; rm pcre-8.41.tar.gz
 &lt;/ul&gt;
 &lt;ol start=&#34;2&#34;&gt;
 &lt;li&gt;在瀏覽器中輸入: http://localhost:5601/ 即可以看到Kibana介面&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;filebeat-on-windows安裝&#34;&gt;FileBeat on Windows安裝&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請至官網 &lt;a href=&#34;https://www.elastic.co/downloads/beats/filebeat&#34;&gt;https://www.elastic.co/downloads/beats/filebeat&lt;/a&gt; 進行下載&lt;/li&gt;
+&lt;li&gt;將壓縮檔解壓縮到C:\ELK\&lt;/li&gt;
+&lt;li&gt;重新命名為filebeat&lt;/li&gt;
+&lt;li&gt;在filebeat下新增logs資料夾&lt;/li&gt;
+&lt;li&gt;以管理員權限打開Windows PowerShell，執行以下命令&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;PS &amp;gt; cd &amp;#39;C:\ELK\Filebeat&amp;#39;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;PS C:\ELK\Filebeat &amp;gt; ./install-service-filebeat.ps1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;打開C:\ELK\filebeat\filebeat.yml進行相關配置，請查看附件內容&lt;/li&gt;
+&lt;li&gt;打開cmd輸入services.msc會出現windows服務。請啟動filebeat&lt;/li&gt;
 &lt;/ol&gt;
 
         
