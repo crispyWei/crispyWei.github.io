@@ -1,22 +1,70 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>ELK on Bobby’s Blog</title>
-    <link>https://crispywei.github.io/tags/elk/</link>
-    <description>Recent content in ELK on Bobby’s Blog</description>
+    <title>系統維運 on Bobby’s Blog</title>
+    <link>https://crispywei.github.io/categories/%E7%B3%BB%E7%B5%B1%E7%B6%AD%E9%81%8B/</link>
+    <description>Recent content in 系統維運 on Bobby’s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-TW</language>
     <copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/tags/elk/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/categories/%E7%B3%BB%E7%B5%B1%E7%B6%AD%E9%81%8B/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Posts</title>
-      <link>https://crispywei.github.io/post/</link>
+      <title>Kibana、Apache Basic Authentication</title>
+      <link>https://crispywei.github.io/post/kibana-apache-authentication/</link>
       <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://crispywei.github.io/post/</guid>
+      <guid>https://crispywei.github.io/post/kibana-apache-authentication/</guid>
       <description>
         
-          
+          &lt;p&gt;本文將分享如何將透過Apache .htpasswd進行kibana首頁保護&lt;/p&gt;
+&lt;h2 id=&#34;kibanaapache-basic-authentication&#34;&gt;Kibana、Apache Basic Authentication&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;使用「htpasswd」的指令建立密碼檔&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;htpasswd -c .htpasswd elkuser
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;將.htpasswd放置/var/ELK/.htpasswd&lt;/li&gt;
+&lt;li&gt;Apache開啟代理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;LoadModule proxy_module modules/mod_proxy.so
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;LoadModule proxy_http_module modules/mod_proxy_http.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;Apche httpd.conf設置反向代理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;apache-conf&#34;&gt;apache conf&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&amp;lt;VirtualHost *:80&amp;gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;	ServerName 127.0.0.1
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    DocumentRoot &amp;#34;C:\WebServer&amp;#34;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    #因為是Reverse，因此ProxyRequests要關閉
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;    ProxyRequests off
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &amp;lt;Location /&amp;gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;        Auth
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;         AuthType Basic
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        AuthName &amp;#34;Kibana&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        AuthUserFile &amp;#34;C:/WebServer/.htpasswd&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        Require valid-user
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;        #Reverse Proxy
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;        ProxyPass http://127.0.0.1:5601 retry=0
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;        ProxyPassReverse http://127.0.0.1:5601
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;        	 &amp;lt;/Location&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &amp;lt;Location /kibana&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;            #Auth
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;            AuthType Basic
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;            AuthName &amp;#34;Kibana&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;            AuthUserFile &amp;#34;C:/WebServer/.htpasswd&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;            Require valid-user
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;            # Reverse Proxy
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;        ProxyPass http://127.0.0.1:5601 retry=0
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;           ProxyPassReverse http://127.0.0.1:5601
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;     &amp;lt;/Location&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&amp;lt;/VirtualHost&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;run-kibana-on-browser&#34;&gt;Run Kibana on Browser&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;請在網址輸入以下:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;http://127.0.0.1/kibana
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

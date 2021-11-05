@@ -9,6 +9,58 @@
     <copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
     <lastBuildDate>Fri, 05 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Hugo GitHub 如何版本控制</title>
+      <link>https://crispywei.github.io/post/hugo-github-version-control/</link>
+      <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/hugo-github-version-control/</guid>
+      <description>
+        
+          &lt;h2 id=&#34;本機檔案庫與github檔案庫同步&#34;&gt;本機檔案庫與GitHub檔案庫同步&lt;/h2&gt;
+&lt;p&gt;因GitHub Pages只會讀到master的root與docs資料夾，所以需要將Hugo產生的public目錄放到master root上&lt;/p&gt;
+&lt;img src=&#34;https://crispywei.github.io/images/github-image-1.png&#34; width=&#34;700&#34;/&gt;
+&lt;ol&gt;
+&lt;li&gt;先處理public資料夾，在專案根目錄執行&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;rm -rf public
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;git submodule add -b master https://github.com/&amp;lt;USERNAME&amp;gt;/&amp;lt;USERNAME&amp;gt;.github.io.git public
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;接下來執行hugo，此時在public資料夾底下會產生靜態網頁&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;hugo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;開始進行相關部署&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;cd public
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;//加入為進行版控的檔案
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;git add .
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;//本機commit
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;git commit -m &amp;#39;第一次上傳檔案&amp;#39;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;//add後想要移除相關紀錄
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;git rm -r --cached .
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;//送出檔案至檔案庫
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;git push -u origin master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;除了public資料夾外的檔案進行版控，回到專案根目錄&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;//忽略public子目录
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;touch .gitignore
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;echo &amp;#34;public&amp;#34; &amp;gt;&amp;gt; .gitignore
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;//初始化develop branch
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;git checkout --orphan gh-pages
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;git commit --allow-empty -m &amp;#34;原始檔案第一次更新&amp;#34;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;git push origin develop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
       <title>Kibana、Apache Basic Authentication</title>
       <link>https://crispywei.github.io/post/kibana-apache-authentication/</link>
       <pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate>
