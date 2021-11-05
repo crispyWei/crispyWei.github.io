@@ -1,0 +1,22 @@
+[[main]]
+  name = "首頁"
+  url = ""
+  weight = -110
+
+# Submenus are done this way: parent -> identifier
+[[main]]
+  name = "關於我"
+  url = "about/"
+  weight = -107
+
+# social menu links
+
+[[social]]
+  name = "github"
+  type = "social"
+  weight = 1
+  url = "https://github.com/crispyWei"
+[[social]]
+  name = "linkedin"
+  weight = 2
+  url = "https://www.linkedin.com/in/crispywei"
