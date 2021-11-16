@@ -1,9 +1,8 @@
 
 <!DOCTYPE html>
-<html lang="zh-tw" data-figures="" class="home" data-mode="lit">
+<html lang="zh-tw" data-figures="" class="page" data-mode="lit">
   <head>
-	<meta name="generator" content="Hugo 0.89.0" />
-<title>Bobby’s Blog</title>
+<title>Git rebase 命令 | Bobby’s Blog</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,22 +17,21 @@
   
 <meta property="og:locale" content="zh-tw" />
 
-<meta property="og:type" content="website">
-<meta name="description" content="Hello，我是 Bobby Huang，這個部落格的作者，是一位正在往全端開發者的目標目前努力邁進，你可以在這個部落格看到我精選的筆記內容，希望對你會有所幫助。">
+<meta property="og:type" content="article">
+<meta name="description" content="Git rebase 命令">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="" />
-<meta property="og:url" content="https://crispywei.github.io/" />
-<meta property="og:title" content="" />
-<meta property="og:description" content="Hello，我是 Bobby Huang，這個部落格的作者，是一位正在往全端開發者的目標目前努力邁進，你可以在這個部落格看到我精選的筆記內容，希望對你會有所幫助。" />
+<meta name="twitter:title" content="Git rebase 命令" />
+<meta property="og:url" content="https://crispywei.github.io/post/git-rebase/" />
+<meta property="og:title" content="Git rebase 命令" />
+<meta property="og:description" content="Git rebase 命令" />
 <meta property="og:image" content="https://crispywei.github.io/images/thumbnail.png" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://crispywei.github.io/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://crispywei.github.io/icons/favicon-32x32.png">
 <link rel="manifest" href="https://crispywei.github.io/icons/site.webmanifest">
 
-<link rel="canonical" href="https://crispywei.github.io/">
-<link rel="alternate" type="application/rss+xml" href="https://crispywei.github.io/index.xml" title="Bobby’s Blog" />
+<link rel="canonical" href="https://crispywei.github.io/post/git-rebase/">
 
     
 
@@ -71,7 +69,7 @@
       
         
 
-  <div class="nav_parent nav_active">
+  <div class="nav_parent">
     <a href="https://crispywei.github.io/" class="nav_item" title="首頁">首頁 </a>
   </div>
   <div class="nav_parent">
@@ -103,18 +101,10 @@
 </header>
 
     <main>
-
   
-
 <div class="grid-inverse wrap content">
-  <ul class="posts" id="posts">
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/git-rebase/" title="Git rebase 命令">Git rebase 命令</a>
-      </h3>
-      
+  <article class="post_content">
+    <h1 class="post_title">Git rebase 命令</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
@@ -151,316 +141,42 @@
   </span>
   </div>
 
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              該命令可以做以下事情:  不小心在錯誤的分支上執行一次提交。例如修復bug後提交到master上 多個開發者在開發同一套專案時，團隊頻繁的整合自己的修改，如果不進行rebase，很有可能會建構出帶有多個小分支和分叉的歷史  通過rebase命令，可以將其改造成較為平滑的線性歷史。
- # Branch &quot;feature-a&quot; is active git rebase master   收到以上命令Git會去執行feature-a融合到master分支上
- git pull --rebase origin master # pull = fetch + merge   遇到衝突手動修正後，繼續執行
- git add …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/git-rebase/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
+    
+    <h4 id="該命令可以做以下事情">該命令可以做以下事情:</h4>
+<ol>
+<li>不小心在錯誤的分支上執行一次提交。例如修復bug後提交到master上</li>
+<li>多個開發者在開發同一套專案時，團隊頻繁的整合自己的修改，如果不進行rebase，很有可能會建構出帶有多個小分支和分叉的歷史</li>
+</ol>
+<p>通過rebase命令，可以將其改造成較為平滑的線性歷史。</p>
+<blockquote>
+<pre><code># Branch &quot;feature-a&quot; is active
+git rebase master
+</code></pre>
+</blockquote>
+<p>收到以上命令Git會去執行feature-a融合到master分支上</p>
+<blockquote>
+<pre><code>git pull --rebase origin master
+# pull = fetch + merge
+</code></pre>
+</blockquote>
+<p>遇到衝突手動修正後，繼續執行</p>
+<blockquote>
+<pre><code>git add foo.txt
+git add bar.txt
+git rebase --continue
+</code></pre>
+</blockquote>
+<p>另一種複製提交</p>
+<blockquote>
+<pre><code>git cherry-pick 23ec70feb4 
+# 不會進入到歷史紀錄
+# 用來處理小bug修復
+# 會有重複提交可能
+</code></pre>
+</blockquote>
 
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/hugo-github-version-control/" title="Hugo GitHub 如何版本控制">Hugo GitHub 如何版本控制</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 5, 2021</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://crispywei.github.io/tags/hugo' title="hugo" class="post_tag button button_translucent">hugo
-        </a><a href='https://crispywei.github.io/tags/github' title="GitHub" class="post_tag button button_translucent">GitHub
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    分享到:
-    <a href="https://twitter.com/intent/tweet?text=Hugo%20GitHub%20%e5%a6%82%e4%bd%95%e7%89%88%e6%9c%ac%e6%8e%a7%e5%88%b6&url=https%3a%2f%2fcrispywei.github.io%2fpost%2fhugo-github-version-control%2f&tw_p=tweetbutton" class="twitter" title="分享到 Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fcrispywei.github.io%2fpost%2fhugo-github-version-control%2f&t=Hugo%20GitHub%20%e5%a6%82%e4%bd%95%e7%89%88%e6%9c%ac%e6%8e%a7%e5%88%b6" class="facebook" title="分享到 Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="分享到 LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://crispywei.github.io/post/hugo-github-version-control/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
 
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              本機檔案庫與GitHub檔案庫同步 因GitHub Pages只會讀到master的root與docs資料夾，所以需要將Hugo產生的public目錄放到master root上
- 先處理public資料夾，在專案根目錄執行  1rm -rf public 2git submodule add -b master https://github.com/&lt;USERNAME&gt;/&lt;USERNAME&gt;.github.io.git public 接下來執行hugo，此時在public資料夾底下會產生靜態網頁  1hugo 開始進行相關部署  1cd public 2 3//加入為進行版控的檔案 4git add . 5 …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/hugo-github-version-control/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/kibana-apache-authentication/" title="Kibana、Apache Basic Authentication">Kibana、Apache Basic Authentication</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 5, 2021</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://crispywei.github.io/tags/visualize-data' title="visualize data" class="post_tag button button_translucent">visualize data
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    分享到:
-    <a href="https://twitter.com/intent/tweet?text=Kibana%e3%80%81Apache%20Basic%20Authentication&url=https%3a%2f%2fcrispywei.github.io%2fpost%2fkibana-apache-authentication%2f&tw_p=tweetbutton" class="twitter" title="分享到 Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fcrispywei.github.io%2fpost%2fkibana-apache-authentication%2f&t=Kibana%e3%80%81Apache%20Basic%20Authentication" class="facebook" title="分享到 Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="分享到 LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://crispywei.github.io/post/kibana-apache-authentication/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              本文將分享如何將透過Apache .htpasswd進行kibana首頁保護
-Kibana、Apache Basic Authentication  使用「htpasswd」的指令建立密碼檔  1htpasswd -c .htpasswd elkuser 將.htpasswd放置/var/ELK/.htpasswd Apache開啟代理  1LoadModule proxy_module modules/mod_proxy.so2LoadModule proxy_http_module modules/mod_proxy_http.so Apche httpd.conf設置反向代理  apache conf …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/kibana-apache-authentication/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/elk-ubuntu-install/" title="SVS ELK Log Service Ubuntu Install">SVS ELK Log Service Ubuntu Install</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 5, 2021</span>
-    <span class="post_time"> · 2 min read</span><span>&nbsp;· <a href='https://crispywei.github.io/tags/elk' title="elk" class="post_tag button button_translucent">elk
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    分享到:
-    <a href="https://twitter.com/intent/tweet?text=SVS%20ELK%20Log%20Service%20Ubuntu%20Install&url=https%3a%2f%2fcrispywei.github.io%2fpost%2felk-ubuntu-install%2f&tw_p=tweetbutton" class="twitter" title="分享到 Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fcrispywei.github.io%2fpost%2felk-ubuntu-install%2f&t=SVS%20ELK%20Log%20Service%20Ubuntu%20Install" class="facebook" title="分享到 Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="分享到 LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://crispywei.github.io/post/elk-ubuntu-install/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Ubuntu系統，並自動背景執行。 SVS ELK Service on Ubuntu  Ubuntu 16.04.3 LTS Minimal Ubuntu 18.04.1 LTS Minimal JDK 1.8.0 or OpenJDK 1.8.0  Elasticsearch on Ubuntu  在/var底下新增ELK資料夾 在ELK資料夾輸入底下指令會進行下載  1wget …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/elk-ubuntu-install/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/nginx-install-mac/" title="Nginx install Mac local source">Nginx install Mac local source</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 4, 2021</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://crispywei.github.io/tags/nginx' title="nginx" class="post_tag button button_translucent">nginx
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    分享到:
-    <a href="https://twitter.com/intent/tweet?text=Nginx%20install%20Mac%20local%20source&url=https%3a%2f%2fcrispywei.github.io%2fpost%2fnginx-install-mac%2f&tw_p=tweetbutton" class="twitter" title="分享到 Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fcrispywei.github.io%2fpost%2fnginx-install-mac%2f&t=Nginx%20install%20Mac%20local%20source" class="facebook" title="分享到 Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="分享到 LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://crispywei.github.io/post/nginx-install-mac/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              Nginx Mac 本機安裝 若使用brew安裝Nginx後續要進行add mudule較麻煩會發生找不到configure的情況，為防止此情況發生一開始就使用本機進行安裝配置
-下載Nginx到本機
- cd /usr/local/src #src無此目錄自行建立 curl -OL http://nginx.org/download/nginx-1.12.2.tar.gz ＃下載最新穩定版本 tar -xvzf nginx-1.12.2.tar.gz &amp;&amp; rm nginx-1.12.2.tar.gz   下載PCRE Librry PCRE函式庫提供了正規表示功能，nginx.conf內設 …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/nginx-install-mac/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-      <li class="post_item">
-  <div class="excerpt">
-    <div class="excerpt_header">
-      <h3 class="post_link">
-        <a href="https://crispywei.github.io/post/elk-windows-install/" title="SVS ELK Log Service Windows Install">SVS ELK Log Service Windows Install</a>
-      </h3>
-      
-  <div class="post_meta">
-    <span><svg class="icon">
-  <use xlink:href="#calendar"></use>
-</svg></span>
-    <span class="post_date">
-      Nov 4, 2021</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://crispywei.github.io/tags/elk' title="elk" class="post_tag button button_translucent">elk
-        </a>
-    </span>
-    <span class="page_only">&nbsp;·
-  <div class="post_share">
-    分享到:
-    <a href="https://twitter.com/intent/tweet?text=SVS%20ELK%20Log%20Service%20Windows%20Install&url=https%3a%2f%2fcrispywei.github.io%2fpost%2felk-windows-install%2f&tw_p=tweetbutton" class="twitter" title="分享到 Twitter" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#twitter"></use>
-</svg>
-    </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fcrispywei.github.io%2fpost%2felk-windows-install%2f&t=SVS%20ELK%20Log%20Service%20Windows%20Install" class="facebook" title="分享到 Facebook" target="_blank" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#facebook"></use>
-</svg>
-    </a>
-    <a href="#linkedinshare" id = "linkedinshare" class="linkedin" title="分享到 LinkedIn" rel="nofollow">
-      <svg class="icon">
-  <use xlink:href="#linkedin"></use>
-</svg>
-    </a>
-    <a href="https://crispywei.github.io/post/elk-windows-install/" title="Copy Link" class="link link_yank">
-      <svg class="icon">
-  <use xlink:href="#copy"></use>
-</svg>
-    </a>
-  </div>
-  </span>
-  </div>
-
-    </div>
-      <div class="excerpt_footer">
-        <div>
-          <p class="pale">
-            
-              本文將分享如何將Elasticsearch、Logstash、Kibana、Filebeat安裝至Windows系統，並自動背景執行。 SVS ELK Service on Windows  Windows 10 Minimal Windows Server 2012 Minimal JDK 1.8.0  Elasticsearch on Windows  請至官網 https://www.elastic.co/downloads/elasticsearch 6.5.1版本 檔案重新命名後放置C:\ELK\elasticsearch 到C:\ELK\elasticsearch\bin …
-            
-          </p>
-          <a href="https://crispywei.github.io/post/elk-windows-install/" title="閱讀更多" class="excerpt_more button">閱讀更多</a>
-        </div>
-      </div>
-    </div>
-  </li>
-
-    <li>
-    </li>
-  </ul>
+  </article>
 <aside class="sidebar">
   <section class="sidebar_inner">
         <h2>Bobby Huang</h2>
@@ -470,9 +186,6 @@ Kibana、Apache Basic Authentication  使用「htpasswd」的指令建立密碼�
       <a href='https://crispywei.github.io/about/' class="button mt-1" role="button" title='閱讀更多'>閱讀更多</a>
     <h2 class="mt-4">最新文章</h2>
     <ul class="flex-column">
-      <li>
-        <a href="https://crispywei.github.io/post/git-rebase/" class="nav-link" title="Git rebase 命令">Git rebase 命令</a>
-      </li>
       <li>
         <a href="https://crispywei.github.io/post/hugo-github-version-control/" class="nav-link" title="Hugo GitHub 如何版本控制">Hugo GitHub 如何版本控制</a>
       </li>
@@ -564,9 +277,8 @@ Kibana、Apache Basic Authentication  使用「htpasswd」的指令建立密碼�
   </section>
 </aside>
 
+  
 </div>
-
-
     </main><svg width="0" height="0" class="hidden">
   <symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook">
     <path d="M437 0H75C33.648 0 0 33.648 0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352 0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"></path>

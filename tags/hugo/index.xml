@@ -52,7 +52,7 @@
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;echo &amp;#34;public&amp;#34; &amp;gt;&amp;gt; .gitignore
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;//初始化develop branch
-&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;git checkout --orphan gh-pages
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;git checkout --orphan  develop
 &lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;git commit --allow-empty -m &amp;#34;原始檔案第一次更新&amp;#34;
 &lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;git push origin develop
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;

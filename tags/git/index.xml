@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Bobby’s Blog</title>
+    <link>https://crispywei.github.io/tags/git/</link>
+    <description>Recent content in Git on Bobby’s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-TW</language>
+    <copyright>Copyright © 2008–2018, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
+    <lastBuildDate>Tue, 16 Nov 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://crispywei.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git rebase 命令</title>
+      <link>https://crispywei.github.io/post/git-rebase/</link>
+      <pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://crispywei.github.io/post/git-rebase/</guid>
+      <description>
+        
+          &lt;h4 id=&#34;該命令可以做以下事情&#34;&gt;該命令可以做以下事情:&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;不小心在錯誤的分支上執行一次提交。例如修復bug後提交到master上&lt;/li&gt;
+&lt;li&gt;多個開發者在開發同一套專案時，團隊頻繁的整合自己的修改，如果不進行rebase，很有可能會建構出帶有多個小分支和分叉的歷史&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通過rebase命令，可以將其改造成較為平滑的線性歷史。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;# Branch &amp;quot;feature-a&amp;quot; is active
+git rebase master
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;收到以上命令Git會去執行feature-a融合到master分支上&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;git pull --rebase origin master
+# pull = fetch + merge
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;遇到衝突手動修正後，繼續執行&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;git add foo.txt
+git add bar.txt
+git rebase --continue
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;另一種複製提交&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;pre&gt;&lt;code&gt;git cherry-pick 23ec70feb4 
+# 不會進入到歷史紀錄
+# 用來處理小bug修復
+# 會有重複提交可能
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/blockquote&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
